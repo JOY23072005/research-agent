@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal,Any
 from pydantic import BaseModel, Field
 
 
@@ -102,3 +102,11 @@ class ResearchResult(BaseModel):
     claims: list[Finding] = Field(default_factory=list)
 
     sources: list[Evidence] = Field(default_factory=list)
+
+class ResearchStep(BaseModel):
+    tool: str
+    input: dict[str, Any]
+
+
+class ResearchPlan(BaseModel):
+    steps: list[ResearchStep]

@@ -1,38 +1,38 @@
-from agent.state import ResearchState
+from llm import get_llm
+from schemas import ResearchPlan
 
 
-state: ResearchState = {
-    "query": "Research ABC Technologies",
+llm = get_llm()
 
-    "entity": {},
+planner = llm.with_structured_output(ResearchPlan)
 
-    "research_round": 0,
+result = planner.invoke(
+    """
+    You are an OSINT research planner.
 
-    "max_research_rounds": 5,
+    Create an initial research plan for:
 
-    "tools_executed": [],
+    "Research NVIDIA"
 
-    "tool_results": [],
+    Available tools:
 
-    "sources": [],
+    - web_search
+    - fetch_page
+    - crawl
+    - browse
+    - extract_page
+    - whois
+    - dns
+    - username_search
+    - email_search
+    - github_search
+    - verify_entity
+    - verify_claim
 
-    "findings": [],
+    Select only tools that are useful for the investigation.
 
-    "claims": [],
+    Return the research plan as structured data.
+    """
+)
 
-    "missing_fields": [],
-
-    "contradictions": [],
-
-    "research_plan": [],
-
-    "entity_valid": False,
-
-    "validation_passed": False,
-
-    "validation_errors": [],
-
-    "final_result": None,
-}
-
-print(state)
+print(result.model_dump_json(indent=2))

@@ -3,3 +3,4 @@ langgraph
 langchain-nvidia-ai-endpoints
 pydantic 
 python-dotenv 
+ddgs
