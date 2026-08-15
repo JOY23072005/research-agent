@@ -1,38 +1,50 @@
-from llm import get_llm
-from schemas import ResearchPlan
+from tools.registry import get_tool
 
 
-llm = get_llm()
+fetch_page = get_tool("fetch_page")
+extract_page = get_tool("extract_page")
 
-planner = llm.with_structured_output(ResearchPlan)
 
-result = planner.invoke(
-    """
-    You are an OSINT research planner.
-
-    Create an initial research plan for:
-
-    "Research NVIDIA"
-
-    Available tools:
-
-    - web_search
-    - fetch_page
-    - crawl
-    - browse
-    - extract_page
-    - whois
-    - dns
-    - username_search
-    - email_search
-    - github_search
-    - verify_entity
-    - verify_claim
-
-    Select only tools that are useful for the investigation.
-
-    Return the research plan as structured data.
-    """
+page = fetch_page(
+    url="https://www.nvidia.com/en-us/"
 )
 
-print(result.model_dump_json(indent=2))
+
+if not page.get("success"):
+    print("Page fetch failed:")
+    print(page)
+    raise SystemExit
+
+
+result = extract_page(page)
+
+
+print("\n==============================")
+print("EXTRACTOR RESULT")
+print("==============================")
+
+
+print("\nSource:")
+print(result["source"])
+
+
+print("\nEmails:")
+print(result["emails"])
+
+
+print("\nPhone numbers:")
+print(result["phone_numbers"])
+
+
+print("\nPrices:")
+print(result["prices"])
+
+
+print("\nSocial links:")
+for item in result["social_links"]:
+    print(item)
+
+
+print("\nPolicy links:")
+for item in result["policy_links"]:
+    print(item)

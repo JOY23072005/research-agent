@@ -110,3 +110,12 @@ class ResearchStep(BaseModel):
 
 class ResearchPlan(BaseModel):
     steps: list[ResearchStep]
+
+class ResearchAnalysis(BaseModel):
+    findings: list[Finding] = Field(default_factory=list)
+
+    missing_fields: list[str] = Field(default_factory=list)
+
+    contradictions: list[Finding] = Field(default_factory=list)
+
+    next_research_required: bool

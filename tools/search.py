@@ -7,11 +7,11 @@ def web_search(
     region: str = "in-en",
 ) -> dict:
     """
-    Search the public web and return normalized results.
+    Search the public web and return normalized JSON.
     """
 
     try:
-        with DDGS(timeout=10) as ddgs:
+        with DDGS(timeout=15) as ddgs:
             results = list(
                 ddgs.text(
                     query,
@@ -21,10 +21,10 @@ def web_search(
                 )
             )
 
-        normalized_results = []
+        normalized = []
 
         for result in results:
-            normalized_results.append({
+            normalized.append({
                 "title": result.get("title"),
                 "url": result.get("href"),
                 "snippet": result.get("body"),
@@ -33,13 +33,13 @@ def web_search(
         return {
             "success": True,
             "query": query,
-            "results": normalized_results,
+            "results": normalized,
         }
 
-    except Exception as e:
+    except Exception as exc:
         return {
             "success": False,
             "query": query,
             "results": [],
-            "error": str(e),
+            "error": str(exc),
         }
